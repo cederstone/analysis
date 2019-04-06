@@ -55,8 +55,11 @@ func main() {
 }
 ```
 
-However, adding a new `MyEnum4` member to the enum require one to find all
-switch statements in your codebase and ensure that they cover all cases.
+However, adding a new `MyEnum4` member to the enum requires one to find all
+switch statements in your codebase and ensure that they cover all cases. Even
+more, if a dependency is updated one needs to carefully determine whether the
+dependency has expanded its list of enum members to ensure one's own switch
+statements are still total.
 
 Missing switch statements when expanding an enum is a common cause of subtle
 bugs. This pass helps avoid them.
