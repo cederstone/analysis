@@ -2,6 +2,14 @@
 
 Static analysis of Go code through golang.org/x/tools/go/analysis
 
+## How to run
+
+```bash
+$ go get github.com/cederstone/analysis/...
+$ enum github.com/...
+$ keyedlit github.com/...
+```
+
 ## Passes
 
 ### keyedlit
