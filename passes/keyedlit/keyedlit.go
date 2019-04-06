@@ -107,17 +107,12 @@ func run(pass *analysis.Pass) (interface{}, error) {
 }
 
 func mustBeSpecified(field *types.Var) bool {
-	// Timeout fields
-	if strings.Contains(field.Name(), "KeepAlive") {
-		if field.Type().String() == "time.Duration" {
-			return true
-		}
-		return false
+	if strings.Contains(field.Name(), "KeepAlive") &&
+		field.Type().String() == "time.Duration" {
+		return true
 	}
-	if strings.Contains(field.Name(), "Timeout") {
-		if field.Type().String() == "time.Duration" {
-			return true
-		}
+	if strings.Contains(field.Name(), "Timeout") &&
+		field.Type().String() == "time.Duration" {
 		return true
 	}
 	return false
