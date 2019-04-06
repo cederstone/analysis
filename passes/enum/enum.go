@@ -121,6 +121,11 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			continue
 		}
 		if _, ok := candidates[v.Type()]; ok {
+			if id.Name == "_" {
+				// We ignore unnamed enum members in case
+				// statements.
+				continue
+			}
 			enums[v.Type()] = append(enums[v.Type()], pass.TypesInfo.Defs[id])
 		}
 	}
