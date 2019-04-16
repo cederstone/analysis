@@ -11,12 +11,12 @@ func TestNonStrict(t *testing.T) {
         keyedlit.Analyzer.Flags.Set("strict", "false")
 	
         testdata := analysistest.TestData()
-        analysistest.Run(t, testdata, keyedlit.Analyzer, "a") // loads testdata/src/a/a.go.
+        analysistest.Run(t, testdata, keyedlit.Analyzer, "nonstrict") // loads testdata/src/a/a.go.
 }
 
 func TestStrict(t *testing.T) {
         keyedlit.Analyzer.Flags.Set("strict", "true")
 	
         testdata := analysistest.TestData()
-        analysistest.Run(t, testdata, keyedlit.Analyzer, "a") // loads testdata/src/a/a.go.
+        analysistest.Run(t, testdata, keyedlit.Analyzer, "strict") // loads testdata/src/a/a.go.
 }
