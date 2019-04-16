@@ -87,3 +87,11 @@ The `enum` pass considers a type an `enum` if
 * its base type is `int`
 * its members are defined in a const block
 * its const members are all defined using the iota pattern
+
+### nakedreturn
+
+If a function has named return values Go let's you omit their names when
+calling `return` in that function. However, doing so increases the burden of
+comprehension on the reader of the code as the code is less explicit and harder
+to reason about in reverse. The benefits to so-called "naked returns" rarely
+outweigh the cost. This pass flags naked return statements as errors.
