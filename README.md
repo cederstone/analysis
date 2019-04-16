@@ -37,6 +37,16 @@ several production issues.
 
 Timeouts and KeepAlives should be carefully thought through.
 
+Additionally, the keyedlit pass can be run in `strict` mode by setting the
+`strict` flag to `true`. In this mode all fields must be specified when
+creating a keyed composite literal. This means that all fields must be
+considered when inintializing a new variable using keyed composite literal
+syntax.
+
+The `strict` flag guards against fields where the zero-value is a poor
+default. This is especially useful when updating dependencies, where
+behaviourally significant fields have been added to existing structs.
+
 ### enum
 
 Go vaguely supports enums through the following `const`/`iota` pattern:
