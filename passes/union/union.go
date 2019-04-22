@@ -172,6 +172,16 @@ func checkTaggedUnions(pass *analysis.Pass) {
 			!types.Identical(t, u.Interface) {
 			return
 		}
+		for _, stmt := range stmt.Body.List {
+			caseClause, ok := stmt.(*ast.CaseClause)
+			if !ok {
+				continue
+			}
+			if len(caseClause.List) == 0 {
+				// This type switch contains a 'default:' clause, ignore.
+				return
+			}
+		}
 		for _, member := range u.Members {
 			had := false
 			for _, stmt := range stmt.Body.List {

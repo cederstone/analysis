@@ -31,10 +31,9 @@ func main() {
 		return
 	}
 
-	switch a.(type) { // want "non-total type switch over union: "
+	switch a.(type) { // total due to 'default' clause
 	case *Member1:
 		return
 	default:
 	}
-
 }

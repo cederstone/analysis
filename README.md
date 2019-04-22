@@ -170,7 +170,8 @@ for implementing closed unions.
 
 The `union` pass checks that whenever there is a type switch on a variable of
 the union interface type, all values of that type are explicitly handled in
-`case`-statements.
+`case`-statements. A type switch is ignored if it includes a `default:` clause;
+if you want to rely on the `union` pass don't specify a `default:` clause.
 
 The `union` pass treats any exported interface that includes an unexported
 method that has no parameters and returns no values as a tagged union.
@@ -199,7 +200,6 @@ func bad() {
 	switch letter.(type) {
 	case *A:
 		fmt.Println("Yay we have an A!")
-	default:
 	}
 }
 
@@ -211,7 +211,17 @@ func good() {
 		fmt.Println("Yay we have an A!")
 	case *B:
 		fmt.Println("Yay we have a B!")
+	}
+}
+
+// GOOD
+func good() {
+	letter := getLetter()
+	switch letter.(type) {
+	case *A:
+		fmt.Println("Yay we have an A!")
 	default:
+		fmt.Println("We have covered all remaining cases by default!")
 	}
 }
 ```

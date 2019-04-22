@@ -14,6 +14,12 @@ func main() {
 		return
 	}
 
+	switch f.(type) { // total using default clause
+	case *a.Member1:
+		return
+	default:
+	}
+
 	switch b := f.(type) { // want "non-total type switch over union: "
 	case *a.Member1:
 		_ = b
@@ -28,26 +34,29 @@ func main() {
 	switch f.(type) { // want "non-total type switch over union: "
 	case *a.Member1:
 		return
-	default:
 	}
 
 	var g Bar
 	switch g.(type) { // One type alias used
 	case *a.Member1, Bar2:
 		return
-	default:
 	}
 
 	switch g.(type) { // want "non-total type switch over union: "
 	case Bar2:
 		return
-	default:
 	}
 
 	switch g.(type) { // total using type aliases
 	case Bar1, Bar2:
 		return
+	}
+
+	switch g.(type) { // total using type aliases and default clause
+	case Bar1:
+		return
 	default:
+		return
 	}
 
 	switch g.(type) { // total using type aliases split cases
@@ -55,6 +64,5 @@ func main() {
 		return
 	case Bar2:
 		return
-	default:
 	}
 }
