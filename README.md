@@ -161,11 +161,10 @@ func foo() (n int) {
 ### union
 
 Go supports unions by having an exported interface contain an unexprted 'tag'
-method. By adding compile-time type assertions (i.e., `var _ Interface =
-new(Obj)` this allows one to ensure that all members of a union satisfy the
-union's interface. This strategy is used in the `go/ast` package among other
-places, where all types that implement the `ast.Expr` interface must implement
-the `exprNode()` method:
+method. By adding compile-time type assertions this allows one to ensure that
+all members of a union satisfy the union's interface. This strategy is used in
+the `go/ast` package among other places, where all types that implement the
+`ast.Expr` interface must implement the `exprNode()` method:
 https://golang.org/src/go/ast/ast.go?s=1432:1473#L31. This is a useful trick
 for implementing closed unions.
 
