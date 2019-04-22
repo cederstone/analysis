@@ -47,6 +47,24 @@ The `strict` flag guards against fields where the zero-value is a poor
 default. This is especially useful when updating dependencies, where
 behaviourally significant fields have been added to existing structs.
 
+```go
+// BAD
+func main() {
+	c := &http.Client{
+		Transport: http.DefaultTransport,
+	}
+}
+
+// GOOD
+func main() {
+	c := &http.Client{
+		Transport: http.DefaultTransport,
+		Timeout: 0,
+		KeepAlive: 0,
+	}
+}
+```
+
 ### enum
 
 Go vaguely supports enums through the following `const`/`iota` pattern:
@@ -88,6 +106,36 @@ The `enum` pass considers a type an `enum` if
 * its members are defined in a const block
 * its const members are all defined using the iota pattern
 
+```go
+type MyEnum int
+
+const (
+	MyEnum1 MyEnum = iota
+	MyEnum2
+	MyEnum3
+)
+
+// BAD
+func bad() {
+	val := getEnum(...)
+	switch val {
+	case MyEnum1:
+		return
+	default:
+	}
+}
+
+// GOOD
+func good() {
+	val := getEnum(...)
+	switch val {
+	case MyEnum1, MyEnum2:
+		return
+	case MyEnum3:
+	}
+}
+```
+
 ### nakedreturn
 
 If a function has named return values Go let's you omit their names when
@@ -95,3 +143,76 @@ calling `return` in that function. However, doing so increases the burden of
 comprehension on the reader of the code as the code is less explicit and harder
 to reason about in reverse. The benefits to so-called "naked returns" rarely
 outweigh the cost. This pass flags naked return statements as errors.
+
+```go
+// BAD
+func foo() (n int) {
+	n = 3
+	return
+}
+
+// GOOD
+func foo() (n int) {
+	n = 3
+	return n
+}
+```
+
+### union
+
+Go supports unions by having an exported interface contain an unexprted 'tag'
+method. By adding compile-time type assertions (i.e., `var _ Interface =
+new(Obj)` this allows one to ensure that all members of a union satisfy the
+union's interface. This strategy is used in the `go/ast` package among other
+places, where all types that implement the `ast.Expr` interface must implement
+the `exprNode()` method:
+https://golang.org/src/go/ast/ast.go?s=1432:1473#L31. This is a useful trick
+for implementing closed unions.
+
+The `union` pass checks that whenever there is a type switch on a variable of
+the union interface type, all values of that type are explicitly handled in
+`case`-statements.
+
+The `union` pass treats any exported interface that includes an unexported
+method that has no parameters and returns no values as a tagged union.
+
+The pass checks imported packages and is aware of type aliases.
+
+```go
+type Letter interface {
+    String() string
+	isLetter()
+}
+
+type A struct{}
+
+func (*A) String() string { return "a" }
+func (*A) isLetter() {}
+
+type B struct{}
+
+func (*B) String() string { return "a" }
+func (*B) isLetter() {}
+
+// BAD
+func bad() {
+	letter := getLetter()
+	switch letter.(type) {
+	case *A:
+		fmt.Println("Yay we have an A!")
+	default:
+	}
+}
+
+// GOOD
+func good() {
+	letter := getLetter()
+	switch letter.(type) {
+	case *A:
+		fmt.Println("Yay we have an A!")
+	case *B:
+		fmt.Println("Yay we have a B!")
+	default:
+	}
+}
+```
