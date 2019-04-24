@@ -18,6 +18,7 @@ type FooA int
 type FooB int
 type FooC int
 type FooD int
+type FooE int
 
 const (
 	_ FooA = iota
@@ -33,6 +34,9 @@ const (
 
 	FooD1 FooD = iota
 	FooD2
+
+	FooE1 FooE = iota
+	FooE2      = FooE(1)
 )
 
 func main() {
@@ -49,7 +53,7 @@ func main() {
 	case FooA1:
 	}
 	d := FooA1
-	switch c { // anonynmous member is ignored
+	switch d { // anonynmous member is ignored
 	case FooA1, FooA2:
 	}
 	e := FooB1
@@ -64,5 +68,9 @@ func main() {
 	switch g { // fully specified
 	case FooD1:
 	case FooD2:
+	}
+	h := FooE1
+	switch h { // not using iota
+	case FooE1:
 	}
 }

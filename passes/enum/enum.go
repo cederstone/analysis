@@ -102,8 +102,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				tok, ok := call.Args[0].(*ast.Ident)
 				if !ok {
 					delete(candidates, t)
-				}
-				if tok.Name != "iota" {
+				} else if tok.Name != "iota" {
 					delete(candidates, t)
 				}
 			default:
