@@ -140,7 +140,11 @@ func checkTaggedUnions(pass *analysis.Pass) {
 				// We don't support this case.
 				return
 			}
-			typeAssertIdent = texpr.X.(*ast.Ident)
+			typeAssertIdent, ok = texpr.X.(*ast.Ident)
+			if !ok {
+				// We don't support this case.
+				return
+			}
 		case *ast.AssignStmt:
 			if len(x.Rhs) != 1 {
 				// We don't support this case.
@@ -151,7 +155,11 @@ func checkTaggedUnions(pass *analysis.Pass) {
 				// We don't support this case.
 				return
 			}
-			typeAssertIdent = texpr.X.(*ast.Ident)
+			typeAssertIdent, ok = texpr.X.(*ast.Ident)
+			if !ok {
+				// We don't support this case.
+				return
+			}
 		default:
 			// We don't support this case.
 			return

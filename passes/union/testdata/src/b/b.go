@@ -65,4 +65,11 @@ func main() {
 	case Bar2:
 		return
 	}
+
+	// not a union!
+	x := map[string]interface{}{"a": 1}
+	switch x["a"].(type) {
+	case int:
+		return
+	}
 }
